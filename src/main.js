@@ -7,6 +7,7 @@ import authConfig from "../auth_config.json";
 import { setupAuth } from "./auth";
 import UUID from "vue-uuid";
 
+
 let app = createApp(App).use(router);
 const emitter = mitt();
 

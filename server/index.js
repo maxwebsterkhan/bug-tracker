@@ -1,26 +1,24 @@
 const express = require("express");
-const cors = require("cors");
-const app = express();
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
-let bugModel = require("./bug_schema");
-
-app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(bodyParser.json());
+const app = express();
 
 app.use(cors());
-app.listen(3000, () => {
-  console.log("Server started on port 3000");
-});
 
-mongoose.connect("mongodb://localhost:27017/bugApp", {
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+
+mongoose.connect("mongodb://localhost:27017/bug", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-const db = mongoose.connection;
+var db = mongoose.connection;
 db.on("open", () => {
   console.log("Connected to mongoDB");
 });
@@ -28,23 +26,37 @@ db.on("error", (error) => {
   console.log(error);
 });
 
-// post
+// import bug schema as model
+let bugModel = require("./bug_schema");
 
+// ROUTES
+
+app.get("/", (req, res) => {
+  res.send("hello");
+});
+
+// add bug
 app.post("/bug/add", (req, res) => {
   let newBug = new bugModel();
-  newBug.issue = req.body.issue;
-  newBug.message = req.body.message;
-  newBug.priority = req.body.priority;
+  newBug.title = req.body.bug.title;
+  newBug.details = req.body.bug.details;
+  newBug.priority = req.body.bug.priority;
+  newBug.completed = false;
+
   newBug.save((err) => {
     if (err) {
+      console.log(err);
       res.send("Error while adding bug");
     } else {
+      console.log(newBug);
       res.send("bug added");
     }
   });
 });
 
-// completed bugs
+// FETCH TO-DO
+
+// completed
 app.get("/bug/completed", (req, res) => {
   bugModel.find({ completed: true }, (err, bugs) => {
     if (err) {
@@ -55,8 +67,7 @@ app.get("/bug/completed", (req, res) => {
   });
 });
 
-// uncompleted bugs
-
+// uncompleted
 app.get("/bug/uncompleted", (req, res) => {
   bugModel.find({ completed: false }, (err, bugs) => {
     if (err) {
@@ -67,18 +78,29 @@ app.get("/bug/uncompleted", (req, res) => {
   });
 });
 
-// update bugs
-
+// update
 app.post("/bug/complete/:id", (req, res) => {
   bugModel.findByIdAndUpdate(req.params.id, { completed: true }, (err, bug) => {
     if (!err) {
       res.send("Good Work");
+     
     }
   });
 });
 
-// delete bug
+app.post("/bug/uncomplete/:id", (req, res) => {
+  bugModel.findByIdAndUpdate(
+    req.params.id,
+    { completed: false },
+    (err, bug) => {
+      if (!err) {
+        res.send("Uncompleted");
+      }
+    }
+  );
+});
 
+// delete bug
 app.delete("/bug/:id", (req, res) => {
   let query = { _id: req.params.id };
   bugModel.deleteOne(query, (err) => {
@@ -88,4 +110,8 @@ app.delete("/bug/:id", (req, res) => {
       res.send("bug deleted");
     }
   });
+});
+
+app.listen(3000, () => {
+  console.log("Server started on port 3000");
 });

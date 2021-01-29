@@ -1,26 +1,15 @@
  <template>
   <nav
-    class="navbar container is-fullhd"
-    role="navigation"
+    class="navbar container is-fullhd is-dark"
+    role="navigation navbarcolour"
     aria-label="main navigation"
+    style="padding: 8px 0"
   >
     <div class="navbar-brand"></div>
-    <div id="navbar" class="navbar-menu">
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div
-            v-if="!buttonAddForm && $auth.isAuthenticated.value"
-            class="field has-addons"
-          >
-            <div class="control">
-              <input class="input" type="text" placeholder="Search an issue" />
-            </div>
-            <div class="control">
-              <a class="button is-dark"> Search </a>
-            </div>
-          </div>
-        </div>
-        <div class="navbar-item">
+    <div id="navbar" class="navbar-menu navbarcolour">
+      <div class="navbar-end navbarcolour">
+        <div class="navbar-item navbarcolour"></div>
+        <div class="navbar-item navbarcolour">
           <div @click="toggleButton" class="buttons">
             <button class="button is-dark">
               <router-link to="/view" class="navbar-item"
@@ -32,28 +21,32 @@
       </div>
     </div>
   </nav>
-  <form>
-    <div class="container is-fullhd">
-      <div v-if="$auth.isAuthenticated.value" class="notification">
+
+  <div style="border: 2px solid #363636" class="container is-fullhd">
+    <div v-if="$auth.isAuthenticated.value" class="notification">
+      <form @submit.prevent="addBug">
         <div class="field">
-          <label class="label">Issue Name</label>
+          <label class="label">Issue title:</label>
           <div class="control">
             <input
+              required
               class="input"
               type="text"
               placeholder="Text input"
-              v-model="name"
+              v-model="title"
             />
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Message</label>
+          <label class="label">Issue details:</label>
           <div class="control">
             <textarea
+              required
               class="textarea"
               placeholder="Textarea"
-              v-model="message"
+              v-model="details"
+              label="Add Bug"
             ></textarea>
           </div>
         </div>
@@ -62,55 +55,61 @@
           <label class="label">Priority</label>
           <div class="control">
             <div class="select">
-              <select v-model="priority">
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
+              <select required v-model="priority">
+                <option>Minor</option>
+                <option>Major</option>
+                <option>Critical</option>
+                <option>Blocker</option>
               </select>
             </div>
           </div>
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button @click.prevent="handleSubmitForm" class="button is-dark">
+            <button type="submit" value="submit" class="button is-dark">
               Submit
             </button>
           </div>
-          <div class="control">
-            <button class="button is-dark">Cancel</button>
-          </div>
         </div>
-      </div>
-      <div v-if="!$auth.isAuthenticated.value" class="notification">
-        <p>Please log in to add issues</p>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
+  <div
+    style="background-color: rgb(216, 216, 216) !important"
+    v-if="!$auth.isAuthenticated.value"
+    class="notification container is-fullhd"
+  >
+    <p>Please log in to add issues</p>
+  </div>
 </template>
+
+
+
 
 <script>
 import axios from "axios";
-import { uuid } from "vue-uuid";
 
 export default {
   data() {
     return {
-      bug: {
-        issue: "",
-        message: "",
-        priority: "",
-        uuid: uuid.v1(),
-      },
+      title: "",
+      details: "",
+      priority: "",
     };
   },
   methods: {
-    handleSumit() {
+    addBug() {
       axios
-        .post("http://localhost:3000/todo/add", {
-          todo: this.newTodo,
+        .post("http://localhost:3000/bug/add", {
+          bug: {
+            title: this.title,
+            details: this.details,
+            priority: this.priority,
+          },
         })
         .then((response) => {
           this.message = response.data;
+          console.log("sent");
         });
     },
   },
@@ -123,9 +122,12 @@ nav {
   a {
     font-weight: bold;
     color: #e0e0e0;
-    &.router-link-exact-active {
+    &.button-hover-color {
       color: #919191;
     }
   }
+}
+.notification {
+  background-color: rgb(233, 233, 233) !important;
 }
 </style>

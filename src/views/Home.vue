@@ -1,22 +1,20 @@
 <template>
   <div class="home"></div>
-  <search-bar></search-bar>
-  <div class="container is-fullhd">
-    <div class="about">
-      <div class="hero is-dark">
-        <div class="hero-body">
-          <div>
-            <h1 class="title is-size-1">Welcome!</h1>
-          </div>
-        </div>
-      </div>
-      <div class="container pBottom10">
-        <p class="org-description is-size-4">
-          This is a project made as a prototype for a bug tracking application.
-        </p>
-      </div>
+  <search-bar style="padding: 10px 0"></search-bar>
+
+  <!-- Hero content: will be in the middle -->
+  <section class="hero is-large container is-fullhd hero-colors">
+    <div class="hero-body is-fullhd">
+      <p style="font-size: 70px" class="title">Welcome!</p>
+      <p
+        style="font-size: 40px"
+        v-if="$auth.isAuthenticated.value"
+        class="title"
+      >
+        {{ $auth.user.value.name }}
+      </p>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -40,7 +38,7 @@ export default {
 
 <style lang="scss" scoped>
 nav {
-  background-color: rgb(122, 122, 122);
+  background-color: rgb(36, 36, 36);
   a {
     font-weight: bold;
     color: #e0e0e0 !important;
@@ -49,17 +47,13 @@ nav {
     }
   }
 }
-.hero-body {
-  background-color: rgb(122, 122, 122);
-}
 .title {
   text-align: center;
 }
 .subtitle {
   text-align: center;
 }
-.container {
-  background-color: rgb(176, 176, 176);
-  text-align: center;
+.hero-colors {
+  background-color: rgb(216, 216, 216) !important;
 }
 </style>

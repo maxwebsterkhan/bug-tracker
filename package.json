@@ -9,6 +9,11 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.13.6",
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-brands-svg-icons": "^5.15.2",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^3.0.0-1",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "bootstrap-vue": "^2.21.2",
