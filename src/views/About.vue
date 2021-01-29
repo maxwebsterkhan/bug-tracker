@@ -27,7 +27,7 @@
       <p style="font-size: 30px; padding-top: 10px" class="subtitle">
         This was a made for the BMW team at Zone Digital.
       </p>
-      <p class="subtitle">Find the code here</p>
+      <p style="font-size: 28px;" class="subtitle">Find me at:</p>
       <div align="center">
         <button
           style="background-color: rgb(216, 216, 216)"
@@ -36,7 +36,24 @@
           <span class="icon is-medium">
             <i class="fab fa-github"></i>
           </span>
-          <span><a href="https://www.github.com">GitHub</a></span>
+          <span
+            ><a href="https://github.com/maxwebsterkhan/bug-tracker"
+              >GitHub</a
+            ></span
+          >
+        </button>
+        <button
+          style="background-color: rgb(216, 216, 216)"
+          class="button is-large"
+        >
+          <span class="icon is-medium">
+            <i class="fab fa-linkedin"></i>
+          </span>
+          <span
+            ><a href="https://linkedin.com/in/max-webster-khan"
+              >Linkedin</a
+            ></span
+          >
         </button>
       </div>
     </div>
