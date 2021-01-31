@@ -109,6 +109,7 @@ export default {
         })
         .then((response) => {
           this.message = response.data;
+          console.log(this.message);
           console.log("sent");
         });
     },

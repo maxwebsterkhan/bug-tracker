@@ -67,6 +67,9 @@ nav {
     &.router-link-exact-active {
       color: #919191;
     }
+    &.button-hover-color {
+      background-color: purple;
+    }
   }
 }
 </style>

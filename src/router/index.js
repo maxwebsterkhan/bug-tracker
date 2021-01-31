@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import { routeGuard } from "../auth";
 
 const routes = [
   {
@@ -24,6 +25,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../components/BugForm"),
+    beforeEnter: routeGuard,
   },
 
   {
@@ -34,6 +36,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../components/BugList"),
+    beforeEnter: routeGuard,
   },
 
   {

@@ -1,4 +1,9 @@
 <template>
+  <modal :data="bug" v-if="modalVisible" @close="modalVisible = !modalVisible"
+    ><template #title>{{ bug.title }}</template
+    ><template #details>{{ bug.details }}</template></modal
+  >
+
   <nav
     class="navbar container is-fullhd"
     role="navigation"
@@ -86,33 +91,9 @@
                 >
                   <td align="center">{{ bug.title }}</td>
                   <td align="center">
-                    <button
-                      @click="isHidden = !isHidden"
-                      class="button is-info"
-                    >
+                    <button @click="openModal(bug)" class="button is-info">
                       <i class="fas fa-eye"></i>
                     </button>
-                    <div class="modal is-active" v-if="isHidden">
-                      <div class="modal-background"></div>
-                      <div class="modal-card">
-                        <header class="modal-card-head">
-                          <p class="modal-card-title">{{ bug.title }}</p>
-                          <button
-                            class="delete"
-                            @click="isHidden = !isHidden"
-                            aria-label="close"
-                          ></button>
-                        </header>
-                        <section class="modal-card-body">
-                          {{ bug.details }}
-                        </section>
-                        <footer class="modal-card-foot">
-                          <button @click="isHidden = !isHidden" class="button">
-                            Close
-                          </button>
-                        </footer>
-                      </div>
-                    </div>
                   </td>
                   <td align="center">{{ bug.priority }}</td>
                   <td align="center">
@@ -134,6 +115,7 @@
                         <i class="fas fa-times"></i>
                       </span>
                     </button>
+                    <div></div>
                   </td>
                 </tr>
               </tbody>
@@ -164,34 +146,9 @@
                     {{ bug.title }}
                   </td>
                   <td align="center">
-                    <button
-                      @click="isHidden = !isHidden"
-                      class="button is-info"
-                    >
+                    <button @click="openModal(bug)" class="button is-info">
                       <i class="fas fa-eye"></i>
                     </button>
-
-                    <div class="modal is-active" v-if="isHidden">
-                      <div class="modal-background"></div>
-                      <div class="modal-card">
-                        <header class="modal-card-head">
-                          <p class="modal-card-title">{{ bug.title }}</p>
-                          <button
-                            class="delete"
-                            @click="isHidden = !isHidden"
-                            aria-label="close"
-                          ></button>
-                        </header>
-                        <section class="modal-card-body">
-                          {{ bug.details }}
-                        </section>
-                        <footer class="modal-card-foot">
-                          <button @click="isHidden = !isHidden" class="button">
-                            Close
-                          </button>
-                        </footer>
-                      </div>
-                    </div>
                   </td>
 
                   <td align="center">{{ bug.priority }}</td>
@@ -234,16 +191,18 @@
 
 <script>
 import axios from "axios";
+import Modal from "./Partials/Modal";
 
 export default {
-  name: "FontAwesomeIcon",
+  components: { Modal },
   data() {
     return {
       search: "",
       buttonAddForm: false,
       completedBugs: [],
       uncompletedBugs: [],
-      isHidden: false,
+      modalVisible: false,
+      modalData: null,
     };
   },
   computed: {
@@ -260,12 +219,18 @@ export default {
   },
 
   methods: {
-    fetchData() {
+    openModal(bug) {
+      this.bug = bug;
+      this.modalVisible = true;
+    },
+    fetchCompleted() {
       axios
         .get("http://localhost:3000/bug/uncompleted")
         .then((response) => (this.uncompletedBugs = response.data))
         .catch((error) => console.log(error));
+    },
 
+    fetchUncompleted() {
       axios
         .get("http://localhost:3000/bug/completed")
         .then(
@@ -278,35 +243,40 @@ export default {
     deleteBugFromCompleted(bugID) {
       axios.delete("http://localhost:3000/bug/" + bugID).then((response) => {
         console.log(response.data);
-        this.fetchData();
+        this.fetchCompleted();
+        this.fetchUncompleted();
       });
     },
     deleteBugFromUncompleted(bugID) {
       axios.delete("http://localhost:3000/bug/" + bugID).then((response) => {
         console.log(response.data);
-        this.fetchData();
+        this.fetchUncompleted();
+        this.fetchCompleted();
       });
     },
     completeBug(bugID) {
       axios
         .post("http://localhost:3000/bug/complete/" + bugID)
         .then((response) => {
+          this.fetchUncompleted();
+          this.fetchCompleted();
           console.log(response.data);
-          this.fetchData();
         });
     },
     uncompleteBug(bugID) {
       axios
         .post("http://localhost:3000/bug/uncomplete/" + bugID)
         .then((response) => {
+          this.fetchCompleted();
+          this.fetchUncompleted();
           console.log(response.data);
-          this.fetchData();
         });
     },
   },
 
   created() {
-    this.fetchData();
+    this.fetchCompleted();
+    this.fetchUncompleted();
   },
 };
 </script>

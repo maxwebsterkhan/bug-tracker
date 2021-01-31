@@ -1,15 +1,15 @@
 <template>
   <nav
     class="navbar container is-fullhd is-dark"
-    role="navigation"
+    role="navigation navbarcolour"
     aria-label="main navigation"
     style="padding: 8px 0"
   >
     <div class="navbar-brand"></div>
-    <div id="navbar" class="navbar-menu">
-      <div class="navbar-end">
-        <div class="navbar-item"></div>
-        <div class="navbar-item">
+    <div id="navbar" class="navbar-menu navbarcolour">
+      <div class="navbar-end navbarcolour">
+        <div class="navbar-item navbarcolour"></div>
+        <div class="navbar-item navbarcolour">
           <div @click="toggleButton" class="buttons">
             <button class="button is-dark">
               <router-link to="/view" class="navbar-item"
@@ -21,61 +21,74 @@
       </div>
     </div>
   </nav>
-  <div class="container is-fullhd">
-    <div class="field">
-      <label class="label">Name</label>
-      <div class="control">
-        <input class="input" type="text" placeholder="Text input" />
-      </div>
-    </div>
 
-    <div class="field">
-      <label class="label">Phone</label>
-      <div class="control">
-        <input class="input" type="tel" placeholder="Text input" />
+  <div class="container is-fullhd lightgrey">
+    <form
+      action="mailto:max.webster-khan@zonedigital.com"
+      method="post"
+      enctype="text/plain"
+    >
+      <div class="field">
+        <label class="label">Name:</label>
+        <p class="control has-icons-left has-icons-right">
+          <input
+            name="name"
+            class="input"
+            type="text"
+            placeholder="Enter name here..."
+          />
+          <span
+            style="font-size: 1em; color: #363636"
+            class="icon is-small is-left"
+          >
+            <i class="fas fa-comment"></i>
+          </span>
+        </p>
       </div>
-    </div>
 
-    <div class="field">
-      <p class="control has-icons-left has-icons-right">
-        <input class="input" type="email" placeholder="Email" />
-        <span class="icon is-small is-left">
-          <i class="fas fa-envelope"></i>
-        </span>
-        <span class="icon is-small is-right">
-          <i class="fas fa-check"></i>
-        </span>
-      </p>
-    </div>
+      <div class="field">
+        <label class="label">Email:</label>
+        <p class="control has-icons-left has-icons-right">
+          <input
+            name="mail"
+            class="input"
+            type="email"
+            placeholder="Enter email here..."
+          />
+          <span
+            style="font-size: 1em; color: #363636"
+            class="icon is-small is-left"
+          >
+            <i class="far fa-envelope"></i>
+          </span>
+        </p>
+      </div>
 
-    <div class="field">
-      <label class="label">Subject</label>
-      <div class="control">
-        <div class="select">
-          <select>
-            <option>Select option</option>
-            <option>Bug</option>
-            <option>Feedback</option>
-          </select>
-        </div>
+      <div class="field">
+        <label class="label">Message:</label>
+        <p class="control has-icons-left has-icons-right">
+          <textarea
+            name="comment"
+            class="textarea"
+            placeholder="Enter details here..."
+          ></textarea>
+          <span
+            style="font-size: 1em; color: #363636"
+            class="icon is-small is-right"
+          >
+            <i class="fas fa-info-circle"></i>
+          </span>
+        </p>
       </div>
-    </div>
 
-    <div class="field">
-      <label class="label">Message</label>
-      <div class="control">
-        <textarea class="textarea" placeholder="Textarea"></textarea>
+      <div class="field is-grouped">
+        <p class="control has-icons-left has-icons-right">
+          <button type="”submit”" value="Submit" class="button is-dark">
+            Contact us
+          </button>
+        </p>
       </div>
-    </div>
-
-    <div class="field is-grouped">
-      <div class="control">
-        <button class="button is-dark">Submit</button>
-      </div>
-      <div class="control">
-        <button class="button is-dark">Cancel</button>
-      </div>
-    </div>
+    </form>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -92,11 +105,8 @@ nav {
 .org-description {
   text-align: center;
 }
-.container {
-  margin-top: 20px;
-  margin: 0 auto;
-  padding: 1rem;
- 
+.lightgrey {
+  padding: 30px 30px;
+  background-color: rgb(216, 216, 216) !important;
 }
-
 </style>
