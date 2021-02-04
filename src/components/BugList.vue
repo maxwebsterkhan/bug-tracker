@@ -1,8 +1,68 @@
 <template>
   <modal :data="bug" v-if="modalVisible" @close="modalVisible = !modalVisible"
     ><template #title>{{ bug.title }}</template
-    ><template #details>{{ bug.details }}</template></modal
+    ><template #details>{{ bug.details }}</template>
+    <template #severity>{{ bug.severity }}</template
+    ><template #author>{{ bug.author }}</template></modal
   >
+  <edit-modal
+    :data="bug"
+    v-if="editModalVisible"
+    @submit="changeBug(bugID)"
+    @close="editModalVisible = !editModalVisible"
+  >
+    <template #title>
+      <div class="control">
+        <p class="modal-card-title">New title:</p>
+        <br />
+        <input
+          required
+          class="input"
+          type="text"
+          :placeholder="bug.title"
+          v-model="title"
+        /></div></template
+    ><template #details>
+      <div class="field">
+        <label class="label">New Bug Details:</label>
+        <div class="control">
+          <textarea
+            required
+            class="textarea"
+            :placeholder="bug.details"
+            v-model="details"
+            label="Add Bug"
+          ></textarea>
+        </div></div
+    ></template>
+    <template #severity>
+      <div class="field">
+        <label class="label">Change Severity</label>
+        <div class="control">
+          <div class="select">
+            <select required v-model="severity">
+              <option>Minor</option>
+              <option>Major</option>
+              <option>Critical</option>
+              <option>Blocker</option>
+            </select>
+          </div>
+        </div>
+      </div></template
+    ><template #author>
+      <div class="field">
+        <label class="label">Author</label>
+        <div class="control">
+          <input
+            required
+            class="input"
+            type="text"
+            :placeholder="bug.author"
+            v-model="author"
+          />
+        </div></div
+    ></template>
+  </edit-modal>
 
   <nav
     class="navbar container is-fullhd"
@@ -71,7 +131,9 @@
         style="border-bottom: 2px solid #363636"
       >
         <div class="container lightgrey">
-          <h1 class="title">Uncompleted</h1>
+          <h1 style="padding-bottom: 3rem; margin: 0 auto" class="title">
+            Uncompleted
+          </h1>
           <h2 class="subtitle">
             <table class="table is-striped is-narrow is-hoverable is-fullwidth">
               <thead class="thead-dark lightgrey">
@@ -79,7 +141,9 @@
                   <th align="center" width="200">Title</th>
                   <th align="center" width="200">Details</th>
                   <th align="center" width="200">Severity</th>
-                  <th align="center" width="200">Complete</th>
+                  <th align="center" width="200">Author</th>
+                  <th align="center" width="200">Move To Completed</th>
+                  <th align="center" width="200">Edit</th>
                   <th align="center" width="200">Delete</th>
                 </tr>
               </thead>
@@ -95,7 +159,10 @@
                       <i class="fas fa-eye"></i>
                     </button>
                   </td>
-                  <td align="center">{{ bug.priority }}</td>
+                  <td :class="bug.severity" align="center">
+                    {{ bug.severity }}
+                  </td>
+                  <td align="center">{{ bug.author }}</td>
                   <td align="center">
                     <button
                       @click="completeBug(bug._id)"
@@ -103,6 +170,13 @@
                     >
                       <span class="icon is-small">
                         <i class="fas fa-check"></i>
+                      </span>
+                    </button>
+                  </td>
+                  <td align="center">
+                    <button @click="openEditModal(bug)" class="button">
+                      <span class="icon is-small">
+                        <i class="fas fa-edit"></i>
                       </span>
                     </button>
                   </td>
@@ -115,7 +189,6 @@
                         <i class="fas fa-times"></i>
                       </span>
                     </button>
-                    <div></div>
                   </td>
                 </tr>
               </tbody>
@@ -126,7 +199,9 @@
 
       <section class="section lightgrey">
         <div class="container lightgrey">
-          <h1 class="title">Completed</h1>
+          <h1 style="padding-bottom: 3rem; margin: 0 auto" class="title">
+            Completed
+          </h1>
           <h2 class="subtitle">
             <table
               class="table is-striped lightgrey is-narrow is-hoverable is-fullwidth"
@@ -136,7 +211,9 @@
                   <th align="center" width="200">Title</th>
                   <th align="center" width="200">Details</th>
                   <th align="center" width="200">Severity</th>
-                  <th align="center" width="200">Uncomplete</th>
+                  <th align="center" width="200">Author</th>
+                  <th align="center" width="200">Move To Uncompleted</th>
+                  <th align="center" width="200">Edit</th>
                   <th align="center" width="200">Delete</th>
                 </tr>
               </thead>
@@ -151,7 +228,10 @@
                     </button>
                   </td>
 
-                  <td align="center">{{ bug.priority }}</td>
+                  <td :class="bug.severity" align="center">
+                    {{ bug.severity }}
+                  </td>
+                  <td align="center">{{ bug.author }}</td>
                   <td align="center">
                     <button
                       @click="uncompleteBug(bug._id)"
@@ -159,6 +239,13 @@
                     >
                       <span class="icon is-small">
                         <i class="fas fa-check"></i>
+                      </span>
+                    </button>
+                  </td>
+                  <td align="center">
+                    <button @click="openEditModal(bug)" class="button">
+                      <span class="icon is-small">
+                        <i class="fas fa-edit"></i>
                       </span>
                     </button>
                   </td>
@@ -192,9 +279,10 @@
 <script>
 import axios from "axios";
 import Modal from "./Partials/Modal";
+import EditModal from "./Partials/EditModal";
 
 export default {
-  components: { Modal },
+  components: { Modal, EditModal },
   data() {
     return {
       search: "",
@@ -202,7 +290,12 @@ export default {
       completedBugs: [],
       uncompletedBugs: [],
       modalVisible: false,
+      editModalVisible: false,
       modalData: null,
+      title: "",
+      details: "",
+      severity: "",
+      author: "",
     };
   },
   computed: {
@@ -222,6 +315,26 @@ export default {
     openModal(bug) {
       this.bug = bug;
       this.modalVisible = true;
+    },
+    openEditModal(bug) {
+      this.bug = bug;
+      this.editModalVisible = true;
+    },
+    changeBug(bugID) {
+      const formData = {
+        title: this.title,
+        details: this.details,
+        severity: this.severity,
+        author: this.author,
+      };
+      axios
+        .put("http://localhost:3000/bug/" + bugID, formData)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     fetchCompleted() {
       axios
@@ -305,6 +418,22 @@ nav {
 }
 .lightgrey {
   background-color: rgb(245, 245, 245) !important;
+}
+.Minor {
+  color: green;
+  font-weight: bold;
+}
+.Major {
+  color: orange;
+  font-weight: bold;
+}
+.Critical {
+  color: red;
+  font-weight: bold;
+}
+.Blocker {
+  color: purple;
+  font-weight: bold;
 }
 </style>
 

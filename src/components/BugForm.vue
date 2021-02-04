@@ -32,7 +32,7 @@
               required
               class="input"
               type="text"
-              placeholder="Text input"
+              placeholder="Title..."
               v-model="title"
             />
           </div>
@@ -44,7 +44,7 @@
             <textarea
               required
               class="textarea"
-              placeholder="Textarea"
+              placeholder="Bug details..."
               v-model="details"
               label="Add Bug"
             ></textarea>
@@ -52,16 +52,28 @@
         </div>
 
         <div class="field">
-          <label class="label">Priority</label>
+          <label class="label">Severity</label>
           <div class="control">
             <div class="select">
-              <select required v-model="priority">
+              <select required v-model="severity">
                 <option>Minor</option>
                 <option>Major</option>
                 <option>Critical</option>
                 <option>Blocker</option>
               </select>
             </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Author</label>
+          <div class="control">
+            <input
+              required
+              class="input"
+              type="text"
+              placeholder="Author..."
+              v-model="author"
+            />
           </div>
         </div>
         <div class="field is-grouped">
@@ -94,7 +106,8 @@ export default {
     return {
       title: "",
       details: "",
-      priority: "",
+      severity: "",
+      author: "",
     };
   },
   methods: {
@@ -104,7 +117,8 @@ export default {
           bug: {
             title: this.title,
             details: this.details,
-            priority: this.priority,
+            severity: this.severity,
+            author: this.author,
           },
         })
         .then((response) => {

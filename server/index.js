@@ -40,7 +40,8 @@ app.post("/bug/add", (req, res) => {
   let newBug = new bugModel();
   newBug.title = req.body.bug.title;
   newBug.details = req.body.bug.details;
-  newBug.priority = req.body.bug.priority;
+  newBug.severity = req.body.bug.severity;
+  newBug.author = req.body.bug.author;
   newBug.completed = false;
 
   newBug.save((err) => {
@@ -83,7 +84,6 @@ app.post("/bug/complete/:id", (req, res) => {
   bugModel.findByIdAndUpdate(req.params.id, { completed: true }, (err, bug) => {
     if (!err) {
       res.send("Good Work");
-     
     }
   });
 });

@@ -6,12 +6,15 @@ const bugSchema = mongoose.Schema({
   details: {
     type: String,
   },
-  priority: {
+  severity: {
     type: String,
   },
   completed: {
     type: Boolean,
     required: true,
+  },
+  author: {
+    type: String,
   },
 });
 
