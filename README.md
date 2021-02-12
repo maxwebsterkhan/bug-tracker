@@ -1,24 +1,18 @@
 # bug-tracker
 
 ## Project setup
+Install Docker.
 ```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
+docker-compose up
 ```
 
-### Compiles and minifies for production
+### Run test suite headless
 ```
-yarn build
+npm install
+npx cypress run
 ```
-
-### Lints and fixes files
+### Run test suite in browser
 ```
-yarn lint
+npm install
+npx cypress open
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

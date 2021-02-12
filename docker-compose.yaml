@@ -1,0 +1,25 @@
+# Use root/example as user/password credentials
+version: "3.1"
+services:
+  mongo:
+    image: mongo
+    restart: always
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+  ui:
+    build:
+      context: .
+    restart: always
+    ports:
+      - 8080:8080
+  server:
+    build:
+      context: server
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      DB_CONNECTION: "mongodb://mongo:27017/bug"

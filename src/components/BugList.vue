@@ -8,7 +8,7 @@
   <edit-modal
     :data="bug"
     v-if="editModalVisible"
-    @submit="changeBug(bugID)"
+    @submit="updateBug(bug._id)"
     @close="editModalVisible = !editModalVisible"
   >
     <template #title>
@@ -20,7 +20,7 @@
           class="input"
           type="text"
           :placeholder="bug.title"
-          v-model="title"
+          v-model.trim="title"
         /></div></template
     ><template #details>
       <div class="field">
@@ -30,7 +30,7 @@
             required
             class="textarea"
             :placeholder="bug.details"
-            v-model="details"
+            v-model.trim="details"
             label="Add Bug"
           ></textarea>
         </div></div
@@ -40,7 +40,7 @@
         <label class="label">Change Severity</label>
         <div class="control">
           <div class="select">
-            <select required v-model="severity">
+            <select required v-model.trim="severity">
               <option>Minor</option>
               <option>Major</option>
               <option>Critical</option>
@@ -58,7 +58,7 @@
             class="input"
             type="text"
             :placeholder="bug.author"
-            v-model="author"
+            v-model.trim="author"
           />
         </div></div
     ></template>
@@ -320,22 +320,31 @@ export default {
       this.bug = bug;
       this.editModalVisible = true;
     },
-    changeBug(bugID) {
-      const formData = {
-        title: this.title,
-        details: this.details,
-        severity: this.severity,
-        author: this.author,
-      };
+
+    updateBug(bugID) {
       axios
-        .put("http://localhost:3000/bug/" + bugID, formData)
-        .then((response) => {
-          console.log(response.data);
+        .put("http://localhost:3000/bug/update/" + bugID, {
+          bug: {
+            title: this.title,
+            details: this.details,
+            severity: this.severity,
+            author: this.author,
+          },
         })
-        .catch(function (error) {
-          console.log(error);
+        .then((response) => {
+          this.message = response.data;
+          this.fetchUncompleted();
+          this.fetchCompleted();
+          this.editModalVisible = false;
+          this.title = "";
+          this.details = "";
+          this.severity = "";
+          this.author = "";
+          console.log(this.message);
+          console.log("updated");
         });
     },
+
     fetchCompleted() {
       axios
         .get("http://localhost:3000/bug/uncompleted")

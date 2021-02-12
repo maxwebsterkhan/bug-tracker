@@ -13,7 +13,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost:27017/bug", {
+const dbConnection = process.env["DB_CONNECTION"] || "mongodb://localhost:27017/bug"
+
+mongoose.connect(dbConnection, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -79,7 +81,16 @@ app.get("/bug/uncompleted", (req, res) => {
   });
 });
 
-// update
+// change
+
+app.put("/bug/update/:id", (req, res) => {
+  bugModel.findByIdAndUpdate(req.params.id, req.body.bug, (err, bug) => {
+    if (!err) {
+      res.send("updated");
+    }
+  });
+});
+
 app.post("/bug/complete/:id", (req, res) => {
   bugModel.findByIdAndUpdate(req.params.id, { completed: true }, (err, bug) => {
     if (!err) {

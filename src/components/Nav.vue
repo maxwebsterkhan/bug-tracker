@@ -42,6 +42,7 @@
         <div class="navbar-item">
           <div v-if="!$auth.loading.value">
             <button
+              id="login"
               class="button is-dark"
               v-if="!$auth.isAuthenticated.value"
               @click="login"
@@ -49,6 +50,7 @@
               Log in
             </button>
             <button
+              id="logout"
               class="button is-dark"
               v-if="$auth.isAuthenticated.value"
               @click="logout"

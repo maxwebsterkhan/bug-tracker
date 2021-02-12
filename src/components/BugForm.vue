@@ -33,7 +33,7 @@
               class="input"
               type="text"
               placeholder="Title..."
-              v-model="title"
+              v-model.trim="title"
             />
           </div>
         </div>
@@ -45,7 +45,7 @@
               required
               class="textarea"
               placeholder="Bug details..."
-              v-model="details"
+              v-model.trim="details"
               label="Add Bug"
             ></textarea>
           </div>
@@ -55,7 +55,7 @@
           <label class="label">Severity</label>
           <div class="control">
             <div class="select">
-              <select required v-model="severity">
+              <select required v-model.trim="severity">
                 <option>Minor</option>
                 <option>Major</option>
                 <option>Critical</option>
@@ -72,7 +72,7 @@
               class="input"
               type="text"
               placeholder="Author..."
-              v-model="author"
+              v-model.trim="author"
             />
           </div>
         </div>
