@@ -83,7 +83,7 @@
 
       <div class="field is-grouped">
         <p class="control has-icons-left has-icons-right">
-          <button type="”submit”" value="Submit" class="button is-dark">
+          <button type="submit" value="Submit" class="button is-dark">
             Contact us
           </button>
         </p>
